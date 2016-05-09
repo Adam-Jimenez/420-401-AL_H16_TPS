@@ -1,5 +1,6 @@
 #include <QtWidgets>
 #include <unistd.h>
+#include <stdexcept>
 #include "client/clients.h"
 #include "client/loop.h"
 
