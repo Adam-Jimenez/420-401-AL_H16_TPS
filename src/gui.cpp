@@ -268,6 +268,7 @@ void Gui::removeFood(int x,
 void Gui::removeAlien(ptr<Alien> alien)
 {
     ptr<QGraphicsSvgItem> item = m_aliensToItems[alien];
+    m_scene->removeItem(item.get());
     m_aliensToItems.remove(alien);
     m_itemsToAliens.remove(item);
 }
