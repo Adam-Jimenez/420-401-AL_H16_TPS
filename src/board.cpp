@@ -15,6 +15,7 @@ Board::Board(int      width,
 {
     // TODO! Complétez-moi
     // Allouer la grille de nourriture !
+    m_food.resize(m_width*m_height);
 }
 
 void Board::setWidth(int width)
@@ -22,12 +23,15 @@ void Board::setWidth(int width)
     // TODO! Complétez-moi
     // Assurez-vous que la largeur fasse du sens
     // Ré-allouer la grille de nourriture si nécessaire !
+    if(width>=0) m_width=width;
+    //realloue m_food
+    m_food.clear();
+    m_food.resize(m_width*m_height);
 }
 
 int Board::width() const
 {
-    // TODO! Complétez-moi
-    return 40;
+    return m_width;
 }
 
 void Board::setHeight(int height)
@@ -35,18 +39,27 @@ void Board::setHeight(int height)
     // TODO! Complétez-moi
     // Assurez-vous que la hauteur fasse du sens
     // Ré-allouer la grille de nourriture si nécessaire !
+    if(height>=0) m_height=height;
+    //realloue m_food
+    m_food.clear();
+    m_food.resize(m_width*m_height);
 }
 
 int Board::height() const
 {
     // TODO! Complétez-moi
-    return 25;
+    return m_height;
 }
 
 void Board::resize(int width,
                    int height)
 {
     // TODO! Complétez-moi
+    if(width>=0) m_width=width;
+    if(height>=0) m_height=height;
+    //realloue m_food
+    m_food.clear();
+    m_food.resize(m_width*m_height);
 }
 
 bool Board::full() const
@@ -54,7 +67,7 @@ bool Board::full() const
     // TODO! Complétez-moi
 
     // Regarde si le nombre d'aliens + nombre de nourriture = taille de la carte
-    return false;
+    return (m_food.size()*m_aliensToPos.size())==(m_width*m_height);
 }
 
 ptr<Alien> Board::operator()(int x,
@@ -64,7 +77,8 @@ ptr<Alien> Board::operator()(int x,
     // Retourne l'alien à la case (x,y) ou le pointeur nul le cas échéant
 
     // Servez-vous de pairToPos !
-    return ptr<Alien>();
+    return m_posToAliens.at(pairToPos(x,y));
+    //return ptr<Alien>();
 }
 
 pair<int, int> Board::operator[](ptr<Alien> alien) const
@@ -73,8 +87,10 @@ pair<int, int> Board::operator[](ptr<Alien> alien) const
     // Retourne une paire (x,y) représentant la case où l'alien est stocké
     // dans la carte ou la paire (-1, -1) le cas échéant
     // Servez-vous de posToPair !
-
-    return make_pair(-1, -1);
+    int x;
+    int y;
+    posToPair(m_aliensToPos(alien), x, y);
+    return make_pair(x, y);
 }
 
 vector< ptr<Alien> > Board::neighboors(ptr<Alien> alien) const
@@ -85,8 +101,19 @@ vector< ptr<Alien> > Board::neighboors(ptr<Alien> alien) const
     // Utilisez la formule sqrt((x1-x2)^2 + (y1-y2)^2) < 3
     // où l'alien passé en paramètre est à la case (x1,y1) et l'autre alien
     // à la case (x2,y2)
+    vector< ptr<Alien> > aliens();
+    int x1, y1;
+    posToPair(m_aliensToPos(alien), x1, y1);
+    for(std::map<int, ptr<Alien>>::const_iterator i=m_posToAliens.begin(); i!=m_posToAliens.end(); i++){
+        if((*i)==alien) continue;
+        int x2, y2;
+        posToPair(m_aliensToPos(*it), x2, y2);
+        if(sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)) < 3){
+            aliens.push_back(*i);
+        }
 
-    return vector< ptr<Alien> >();
+    }
+    return aliens;
 }
 
 vector< pair<int, int> > Board::foods(ptr<Alien> alien) const
