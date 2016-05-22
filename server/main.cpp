@@ -1,11 +1,20 @@
 #include <QtWidgets>
 #include <iostream>
+#include <sstream>
 #include "alien/aliens.h"
 #include "src/simulation.h"
 #include "server/loop.h"
 #include "server/servers.h"
 
 using namespace std;
+
+// faudra surement mettre sa ds un fichier de utils car le main
+// de client contient la meme fonction
+inline void exitWithError(const string& str)
+{
+    cerr << str << endl;
+    exit(1);
+}
 
 int main(int   argc,
          char *argv[])
@@ -31,6 +40,54 @@ int main(int   argc,
             if (arg == "-l")
             {
                 local = true;
+            }
+            else if (arg == "-p") // port
+            {
+                if(i+1 < argc){
+                    stringstream ss(argv[i+1]);
+                    if(!(ss>>port) || port<1024)
+                    {
+                        exitWithError("Erreur avec le parametre de port! (besoin d'un nombre superieur a 1024)");
+                    } else i++;
+                } else {
+                    exitWithError("Erreur, -p prend un argument en parametre! (nombre superieur a 1024");
+                }
+            }
+            else if (arg == "-w") // width
+            {
+                if(i+1 < argc){
+                    stringstream ss(argv[i+1]);
+                    if(!(ss>>width) || width>50 || width<0)
+                    {
+                        exitWithError("Erreur avec le parametre \"width\"! (besoin d'un nombre entre 0 et 50)");
+                    } else i++;
+                } else {
+                    exitWithError("Erreur, -w prend un argument en parametre! (nombre entre0 et 50)");
+                }
+            }
+            else if (arg == "-h") // height
+            {
+                if(i+1 < argc){
+                    stringstream ss(argv[i+1]);
+                    if(!(ss>>height) || height>50 || height<0)
+                    {
+                        exitWithError("Erreur avec le parametre \"height\"! (besoin d'un nombre entre 0 et 50)");
+                    } else i++;
+                } else {
+                    exitWithError("Erreur, -h prend un argument en parametre! (nombre entre0 et 50)");
+                }
+            }
+            else if (arg == "-n") // numOfEachSpecies
+            {
+                if(i+1 < argc){
+                    stringstream ss(argv[i+1]);
+                    if(!(ss>>numOfEachSpecies) || numOfEachSpecies>25 || numOfEachSpecies<1)
+                    {
+                        exitWithError("Erreur avec le parametre \"numOfEachSpecies\"! (besoin d'un nombre entre 1 et 25)");
+                    } else i++;
+                } else {
+                    exitWithError("Erreur, -n prend un argument en parametre! (nombre entre1 et 25)");
+                }
             }
         }
 
