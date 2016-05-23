@@ -91,7 +91,7 @@ pair<int, int> Board::operator[](ptr<Alien> alien) const
     std::map< ptr<Alien>, int>::const_iterator it = m_aliensToPos.find(alien);
     pos = it->second;
     posToPair(pos, x, y); 
-    return make_pair(-1, -1);
+    return make_pair(x, y);
 }
 
 vector< ptr<Alien> > Board::neighboors(ptr<Alien> alien) const
@@ -131,16 +131,20 @@ vector< pair<int, int> > Board::foods(ptr<Alien> alien) const
     // Utilisez la formule sqrt((x1-x2)^2 + (y1-y2)^2) < 3
     // où l'alien passé en paramètre est à la case (x1,y1) et la nourriture
     // à la case (x2,y2)
+    vector< pair<int, int> > foodVector;
 
-    return vector< pair<int, int> >();
+
+    return foodVector;
 }
 
 vector< ptr<Alien> > Board::aliens() const
 {
     // TODO! Complétez-moi
     // Retourne tous les aliens sur la carte (peu importe l'ordre)
-
-    return vector< ptr<Alien> >();
+    vector< ptr<Alien> > aliens;
+    for(map<int, ptr<Alien> >::const_iterator i=m_posToAliens.begin(); i!=m_posToAliens.end(); i++)
+        aliens.push_back(i->second);
+    return aliens;
 }
 
 bool Board::foodAt(int x,
@@ -149,8 +153,9 @@ bool Board::foodAt(int x,
     // TODO! Complétez-moi
     // Retourne vraie si il y a de la nourriture à la case (x,y)
     // faux sinon
+    int pos = pairToPos(x, y);
 
-    return false;
+    return m_food[pos];
 }
 
 void Board::addFood(int x,
@@ -160,6 +165,8 @@ void Board::addFood(int x,
     // Ajoute de la nourriture dans la carte à la case (x,y)
     // Laissez ce code
     if (!m_gui.empty()) { m_gui->addFood(x, y); }
+    int pos = pairToPos(x, y);
+    m_food[pos] = true;
 }
 
 void Board::addAlien(ptr<Alien> alien,
@@ -170,6 +177,13 @@ void Board::addAlien(ptr<Alien> alien,
     // Ajoute un alien dans la carte à la case (x,y)
     // Laissez ce code
     if (!m_gui.empty()) { m_gui->addAlien(alien, x, y); }
+    int pos = pairToPos(x, y);
+    // TODO
+    // est-ce quil faut faire une copie de pointer ici??
+    // et dans les autres fonctions??
+    // ou bien cest loperateur = qui soccupe de sa?
+    m_aliensToPos[alien] = pos;
+    m_posToAliens[pos] = alien;
 }
 
 void Board::removeFood(int x,
@@ -179,14 +193,20 @@ void Board::removeFood(int x,
     // Enlève de la nourriture de la case (x,y)
     // Laissez ce code
     if (!m_gui.empty()) { m_gui->removeFood(x, y); }
+    int pos = pairToPos(x, y);
+    m_food[pos] = false;
 }
 
+// TODO faire les verification de pointers (? ==0)
 void Board::removeAlien(ptr<Alien> alien)
 {
     // TODO! Complétez-moi
     // Enlève un alien de la case (x,y)
     // Laissez ce code
     if (!m_gui.empty()) { m_gui->removeAlien(alien); }
+    int pos = m_aliensToPos[alien];
+    m_aliensToPos.erase(alien);
+    m_posToAliens.erase(pos);
 }
 
 void Board::moveAlien(ptr<Alien> alien,
@@ -197,6 +217,11 @@ void Board::moveAlien(ptr<Alien> alien,
     // Déplace un alien depuis sa case actuelle vers la case (x,y)
     // Laissez ce code
     if (!m_gui.empty()) { m_gui->moveAlien(alien, x, y); }
+    int oldPos = m_aliensToPos[alien];
+    int newPos = pairToPos(x, y);
+    m_aliensToPos[alien] = newPos;
+    m_posToAliens[newPos] = alien;
+    m_posToAliens.erase(oldPos);
 }
 
 int Board::countAliens(Alien::Species species) const
