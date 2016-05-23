@@ -31,6 +31,7 @@ void Board::setWidth(int width)
 
 int Board::width() const
 {
+    // TODO! Complétez-moi
     return m_width;
 }
 
@@ -78,7 +79,6 @@ ptr<Alien> Board::operator()(int x,
 
     // Servez-vous de pairToPos !
     return m_posToAliens.at(pairToPos(x,y));
-    //return ptr<Alien>();
 }
 
 pair<int, int> Board::operator[](ptr<Alien> alien) const
@@ -87,10 +87,11 @@ pair<int, int> Board::operator[](ptr<Alien> alien) const
     // Retourne une paire (x,y) représentant la case où l'alien est stocké
     // dans la carte ou la paire (-1, -1) le cas échéant
     // Servez-vous de posToPair !
-    int x;
-    int y;
-    posToPair(m_aliensToPos(alien), x, y);
-    return make_pair(x, y);
+    int x, y, pos;
+    std::map< ptr<Alien>, int>::const_iterator it = m_aliensToPos.find(alien);
+    pos = it->second;
+    posToPair(pos, x, y); 
+    return make_pair(-1, -1);
 }
 
 vector< ptr<Alien> > Board::neighboors(ptr<Alien> alien) const
@@ -101,18 +102,24 @@ vector< ptr<Alien> > Board::neighboors(ptr<Alien> alien) const
     // Utilisez la formule sqrt((x1-x2)^2 + (y1-y2)^2) < 3
     // où l'alien passé en paramètre est à la case (x1,y1) et l'autre alien
     // à la case (x2,y2)
-    vector< ptr<Alien> > aliens();
-    int x1, y1;
-    posToPair(m_aliensToPos(alien), x1, y1);
-    for(std::map<int, ptr<Alien>>::const_iterator i=m_posToAliens.begin(); i!=m_posToAliens.end(); i++){
-        if((*i)==alien) continue;
-        int x2, y2;
-        posToPair(m_aliensToPos(*it), x2, y2);
-        if(sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)) < 3){
-            aliens.push_back(*i);
-        }
 
-    }
+    vector< ptr<Alien> > aliens;
+    pair<int, int> alienPair = (*this)[alien];
+    int x1=alienPair.first, y1=alienPair.second; 
+    int x2, y2; 
+    
+    for(std::map<int, ptr<Alien> >::const_iterator i=m_posToAliens.begin(); i!=m_posToAliens.end(); i++){
+        if(i->second==alien) continue;
+        //int x2, y2; ?
+        alienPair = (*this)[i->second];
+        x2=alienPair.first;
+        y2=alienPair.second;
+        
+        if(sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)) < 3){ 
+            aliens.push_back(i->second);
+        }
+    }   
+    
     return aliens;
 }
 
