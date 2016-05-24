@@ -370,6 +370,7 @@ namespace
         {
             impl->sim->msgAcked.disconnect(this, &updateSimStatus::Operation::step);
             impl->over = true;
+            impl->gui->setUpdateType(Gui::NONE);
             success();
         }
     }
@@ -1406,7 +1407,7 @@ void Simulation::Impl::update()
 {
     if (started)
     {
-        if (!updating)
+        if (!sim->over() && !updating)
         {
             if (tick == -1)
             {
