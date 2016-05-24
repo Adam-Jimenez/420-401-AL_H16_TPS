@@ -117,8 +117,9 @@ struct AlienProxy::Impl : public BasePrivImpl
         infoTurn(turn);
     }
 
-    virtual void infoTurn(int /*turn*/)
+    virtual void infoTurn(int turn)
     {
+        alien->infoTurn(turn);
         proxy->turnDispatched();
     }
 
