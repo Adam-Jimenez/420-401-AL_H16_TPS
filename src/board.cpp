@@ -4,6 +4,7 @@
 #include "src/gui.h"
 #include "src/board.h"
 #include "alien/alien.h"
+#include <time.h>
 
 using namespace std;
 
@@ -224,32 +225,66 @@ void Board::moveAlien(ptr<Alien> alien,
     m_posToAliens.erase(oldPos);
 }
 
+class isSameSpecies{
+    private:
+        Alien::Species m_species;
+
+    public:
+        isSameSpecies(Alien::Species species) : m_species(species) {};
+
+        bool operator()(const ptr<Alien> alien) const{
+            return m_species==alien->realSpecies();
+        }
+};
+
 int Board::countAliens(Alien::Species species) const
 {
     // TODO! Complétez-moi
     // Compte et retourne le nombre d'aliens d'une certaine espèce
     // Vous devez utiliser un algo de la STL et un foncteur qui
     // prend en paramètre l'espèce voulue pour écrire cette fonction
-
-    return 0;
+    vector< ptr<Alien> > aliens = this->aliens();
+    int nb = count_if(aliens.begin(), aliens.end(), isSameSpecies(species));
+    return nb;
 }
 
 int Board::countFood() const
 {
     // TODO! Complétez-moi
-    // Compte et retourne le nombre d'aliens d'une certaine espèce
+    // Compte et retourne le nombre de bouffe
     // Vous devez utiliser un algo de la STL pour écrire cette fonction
-
-    return 0;
+    int nb = count(m_food.begin(), m_food.end(), 1);
+    return nb;
 }
+
+class randomPair{
+    private:
+        int m_xmax, m_ymax;
+    public:
+        randomPair(int xmax, int ymax) : m_xmax(xmax), m_ymax(ymax) {
+            srand(time(NULL));
+        }
+
+        pair<int, int> operator()(){
+            return pair<int, int>(rand()%m_xmax, rand()%m_ymax);
+        }
+};
 
 pair<int, int> Board::randomEmptySpot() const
 {
     // TODO! Complétez-moi
     // Retourne une case au hasard qui ne contient ni alien
     // ni nourriture.
-
-    return make_pair(0, 0);
+    randomPair rPair(m_width, m_height);
+    pair<int, int> randomSpot = rPair();
+    int pos = pairToPos(randomSpot.first, randomSpot.second);
+    map<int, ptr<Alien> >::const_iterator findIt = m_posToAliens.find(pos);
+    while(findIt != m_posToAliens.end() || m_food[pos]){
+        randomSpot = rPair();
+        pos = pairToPos(randomSpot.first, randomSpot.second);
+        findIt = m_posToAliens.find(pos);
+    }
+    return randomSpot;
 }
 
 // Fonction utilitaire pour vous aider !
