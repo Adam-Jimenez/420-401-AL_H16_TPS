@@ -225,7 +225,11 @@ struct AlienProxy::Impl : public BasePrivImpl
     /* wakeup */
     void preInfoWakeup(int)
     {
-        alien->setSleepingTurn(-1);
+        if (alien->sleepingTurn() >= 0)
+        {
+            alien->setSleepingTurn(-1);
+            alien->setEnergy(Simulation::MaxEnergy);
+        }
         alien->setEatingTurn(-1);
         alien->setMatingTurn(-1);
         infoWakeup();

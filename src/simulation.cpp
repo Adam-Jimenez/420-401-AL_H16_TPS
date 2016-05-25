@@ -9,7 +9,6 @@
 #include "src/updater.h"
 #include "alien/aliens.h"
 #include "alien/proxy.h"
-
 #include <iostream>
 
 using namespace std;
