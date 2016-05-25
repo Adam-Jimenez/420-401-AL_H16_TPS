@@ -17,5 +17,6 @@ class AlienUqomua : public Alien
         Species querySpecies();
 
     private:
+        bool m_move;
 };
 #endif

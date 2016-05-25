@@ -77,9 +77,9 @@ ptr<Alien> Board::operator()(int x,
 {
     // TODO! Complétez-moi
     // Retourne l'alien à la case (x,y) ou le pointeur nul le cas échéant
-
     // Servez-vous de pairToPos !
-    return m_posToAliens.at(pairToPos(x,y));
+    map<int, ptr<Alien> >::const_iterator alienIt = m_posToAliens.find(pairToPos(x,y));
+    return alienIt == m_posToAliens.end()? ptr<Alien>() : alienIt->second;
 }
 
 pair<int, int> Board::operator[](ptr<Alien> alien) const
