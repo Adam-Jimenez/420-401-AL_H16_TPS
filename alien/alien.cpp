@@ -6,6 +6,21 @@
 
 using namespace std;
 
+void Alien::infoTurn(int){
+    cout << " TESSST " << endl;
+}
+
+void Alien::infoStatus(int x,
+                       int y,
+                       int width,
+                       int height,
+                       int energy){
+    cout << "m_energy: " << m_energy << endl;
+    cout << "m_hasMated: " << m_hasMated << endl;
+    cout << "m_sleepingTurn: " << m_sleepingTurn << endl;
+    cout << "m_eatingTurn: " << m_eatingTurn << endl;
+};
+
 const string & Alien::moveString(Alien::Move move)
 {
     static string moveStr[] =

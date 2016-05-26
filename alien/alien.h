@@ -106,17 +106,17 @@ class Alien
         virtual Species querySpecies() = 0;
 
         // appelé pour donner le tour courant
-        virtual void infoTurn(int /*turn*/) { }
+        virtual void infoTurn(int);
 
         // appelé pour prévenir qu'un bébé avec cet id est né !
         virtual void infoSpawn(int /*babyId*/) { }
 
         // appelé pour donner le statut de cet agent
-        virtual void infoStatus(int /*x*/,
-                                int /*y*/,
-                                int /*width*/,
-                                int /*height*/,
-                                int /*energy*/) { }
+        virtual void infoStatus(int x,
+                                int y,
+                                int width,
+                                int height,
+                                int energy);
 
         // appelé pour chaque voisin que l'agent voit
         virtual void infoNeighboor(int /*x*/,

@@ -22,7 +22,6 @@ Alien::Attack AlienUqomua::queryAttack(Color   alienColor,
     return Forfeit;
 }
 
-// faut faire verifs? (si mange, dort, etc)
 Alien::Move AlienUqomua::queryMove()
 {
     return (m_move=!m_move)? Right : Down ;
@@ -35,10 +34,12 @@ bool AlienUqomua::queryEat()
 
 Alien::Color AlienUqomua::queryColor()
 {
-    return Color() == Red? Green : Red;
+    cout << "query color uqomua" << endl;
+    return m_move? Green : Red;
 }
 
 Alien::Species AlienUqomua::querySpecies()
 {
     return Uqomua;
 }
+
