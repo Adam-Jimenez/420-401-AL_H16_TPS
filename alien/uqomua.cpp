@@ -1,11 +1,18 @@
 #include "alien/uqomua.h"
+#include <stdlib.h>
 
 // TODO : Implémenter les comportements prédéfinis de ces aliens
 // tel que décris dans l'énoncé.
 
+// TODO : bug bizarre, desfois il ne change pas de couleur, surtout
+// quand il lui manque de l'energie pour bouger
+
+// TODO : bug GENERAL, desfois, le programme lance une exception
+// du a des coordonnees inconsistentes/illogiques
+
 using namespace std;
 
-AlienUqomua::AlienUqomua() : Alien(Uqomua)
+AlienUqomua::AlienUqomua() : Alien(Uqomua), m_move(rand()%2)
 { }
 
 Alien::Attack AlienUqomua::queryAttack(Color   alienColor,
