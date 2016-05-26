@@ -133,6 +133,19 @@ vector< pair<int, int> > Board::foods(ptr<Alien> alien) const
     // où l'alien passé en paramètre est à la case (x1,y1) et la nourriture
     // à la case (x2,y2)
     vector< pair<int, int> > foodVector;
+    pair<int, int> alienPair = (*this)[alien];
+    int x1 = alienPair.first, y1=alienPair.second;
+    int x2, y2;
+
+    for(int i = 0; i<m_food.size(); i++){
+        if(m_food[i]){
+            posToPair(i, x2, y2);
+
+            if(sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)) < 3){ 
+                foodVector.push_back(make_pair(x2,y2));
+            }
+        }
+    }
 
 
     return foodVector;
