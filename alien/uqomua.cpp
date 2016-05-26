@@ -41,7 +41,6 @@ bool AlienUqomua::queryEat()
 
 Alien::Color AlienUqomua::queryColor()
 {
-    cout << "query color uqomua" << endl;
     return m_move? Green : Red;
 }
 

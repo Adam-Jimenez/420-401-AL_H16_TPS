@@ -17,5 +17,7 @@ class AlienYuhq : public Alien
         Species querySpecies();
 
     private:
+        bool m_moved;
+        bool m_eatCount;
 };
 #endif

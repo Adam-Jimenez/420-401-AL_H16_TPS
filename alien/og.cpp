@@ -34,7 +34,6 @@ Alien::Attack AlienOg::queryAttack(Color   alienColor,
     return Forfeit;
 }
 
-// faire infoStatus
 Alien::Move AlienOg::queryMove()
 {
     // au debut, m_count=0, m_step=0 et m_direction est Up car Up-1 = Right (4)
