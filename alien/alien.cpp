@@ -7,7 +7,7 @@
 using namespace std;
 
 void Alien::infoTurn(int){
-    cout << " TESSST " << endl;
+    cout << " Test infoTurn " << endl;
 }
 
 void Alien::infoStatus(int x,
@@ -15,11 +15,14 @@ void Alien::infoStatus(int x,
                        int width,
                        int height,
                        int energy){
+    /*
     cout << "m_energy: " << m_energy << endl;
     cout << "m_hasMated: " << m_hasMated << endl;
     cout << "m_sleepingTurn: " << m_sleepingTurn << endl;
     cout << "m_eatingTurn: " << m_eatingTurn << endl;
+    */
 };
+
 
 const string & Alien::moveString(Alien::Move move)
 {

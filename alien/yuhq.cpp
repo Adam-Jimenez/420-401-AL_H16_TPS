@@ -1,35 +1,47 @@
 #include "alien/yuhq.h"
+#include <stdlib.h>
 
 // TODO : Implémenter les comportements prédéfinis de ces aliens
 // tel que décris dans l'énoncé.
 
 using namespace std;
 
-AlienYuhq::AlienYuhq() : Alien(Yuhq)
+AlienYuhq::AlienYuhq() : Alien(Yuhq), m_moved(false), m_eatCount(0)
 { }
 
 Alien::Attack AlienYuhq::queryAttack(Color   alienColor,
                                      Species alienSpecies)
 {
-    return Forfeit;
+    if(m_moved) return Plasma;
+    return Acid;
 }
 
 Alien::Move AlienYuhq::queryMove()
 {
+    if(m_eatCount<3) {
+        m_moved = true;
+        return static_cast<Move>(rand()%4+1);
+    }
+    m_moved = false;
     return None;
 }
 
 bool AlienYuhq::queryEat()
 {
+    if(m_eatCount>=3){
+        m_moved = false;
+        m_eatCount = 0;
+        return true;
+    }
     return false;
 }
 
 Alien::Color AlienYuhq::queryColor()
 {
-    return Gray;
+    return static_cast<Color>(rand()%7);
 }
 
 Alien::Species AlienYuhq::querySpecies()
 {
-    return Yuhq;
+    return (species() == Yuhq ? Og : Yuhq);
 }
