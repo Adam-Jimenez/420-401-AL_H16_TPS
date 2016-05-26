@@ -203,7 +203,10 @@ int Alien::matingTurn() const
 void Alien::setMatingTurn(int turn)
 {
     m_matingTurn = turn;
-    m_hasMated   = true;
+    if (turn >= 0)
+    {
+        m_hasMated   = true;
+    }
 }
 
 int Alien::id() const
