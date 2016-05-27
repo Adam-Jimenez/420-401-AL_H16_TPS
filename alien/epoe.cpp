@@ -6,17 +6,42 @@
 using namespace std;
 
 AlienEpoe::AlienEpoe() : Alien(Epoe)
-{ }
+{
+    m_move_counter=0;
+}
 
 Alien::Attack AlienEpoe::queryAttack(Color   alienColor,
                                      Species alienSpecies)
 {
-    return Forfeit;
+    Attack attack;
+    if(alienColor == Yellow || alienColor == Blue || AlienSpecies != Epoe){
+    attack = static_cast<Attack>(rand() % 3);
+    }else{
+        attack = Forfeit;
+    }
+    return attack;
 }
 
 Alien::Move AlienEpoe::queryMove()
 {
-    return None;
+    Move move;
+    if(m_move_counter>=5){
+        random_move=!random_move;
+        m_move_counter=0;
+        if(!random_move){
+            direction = static_cast<Move>(rand()%4+1);
+        }
+    }
+
+    if(random_move){
+            move = static_cast<Move>(rand()%4+1);
+    }else{
+       move = direction; 
+    }
+
+
+    m_move_counter++;
+    return move;
 }
 
 bool AlienEpoe::queryEat()
@@ -26,7 +51,7 @@ bool AlienEpoe::queryEat()
 
 Alien::Color AlienEpoe::queryColor()
 {
-    return Green;
+    return Gray;
 }
 
 Alien::Species AlienEpoe::querySpecies()
