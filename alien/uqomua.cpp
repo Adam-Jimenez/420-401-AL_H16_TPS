@@ -22,7 +22,6 @@ void AlienUqomua::infoStatus(int x, int y, int width, int height, int energy){
 
 void AlienUqomua::infoTurn(int turn){
     cout << "infoTurn" << endl;
-    cout << turn << endl;
 }
 
 Alien::Attack AlienUqomua::queryAttack(Color   alienColor,

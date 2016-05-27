@@ -16,11 +16,8 @@ class AlienOg : public Alien
         Color queryColor();
         Species querySpecies();
 
-        void infoStatus(int x,
-                        int y,
-                        int width,
-                        int height,
-                        int energy);
+        void infoTurn(int turn);
+        void infoStatus(int x, int y, int width, int height, int energy);
 
     private:
         int m_step;

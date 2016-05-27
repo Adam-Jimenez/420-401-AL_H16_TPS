@@ -6,8 +6,13 @@
 
 using namespace std;
 
-AlienYuhq::AlienYuhq() : Alien(Yuhq), m_moved(false), m_eatCount(0)
+AlienYuhq::AlienYuhq() : Alien(Yuhq), m_moved(false), m_eatCount(-1)
 { }
+
+void AlienYuhq::infoTurn(int turn){
+    m_eatCount++;
+    cout << "m_eatCount: " << m_eatCount << endl;
+}
 
 Alien::Attack AlienYuhq::queryAttack(Color   alienColor,
                                      Species alienSpecies)

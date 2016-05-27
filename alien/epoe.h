@@ -15,9 +15,11 @@ class AlienEpoe : public Alien
         bool queryEat();
         Color queryColor();
         Species querySpecies();
-
+        void infoTurn(int turn);
+        //void infoStatus(int x, int y, int width, int height, int energy);
     private:
         int m_move_counter;
+        int m_fight_counter;
         bool random_move;
         Move direction;
 };

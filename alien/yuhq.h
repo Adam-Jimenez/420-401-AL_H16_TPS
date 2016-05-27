@@ -15,9 +15,12 @@ class AlienYuhq : public Alien
         bool queryEat();
         Color queryColor();
         Species querySpecies();
+        void infoTurn(int turn);
+        //void infoStatus(int x, int y, int width, int height, int energy);
+
 
     private:
         bool m_moved;
-        bool m_eatCount;
+        int m_eatCount;
 };
 #endif
