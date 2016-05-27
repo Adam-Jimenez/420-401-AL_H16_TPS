@@ -15,7 +15,8 @@ class AlienUqomua : public Alien
         bool queryEat();
         Color queryColor();
         Species querySpecies();
-
+        void infoStatus(int x, int y, int width, int height, int energy);
+        void infoTurn(int turn);
     private:
         bool m_move;
 };

@@ -106,7 +106,7 @@ class Alien
         virtual Species querySpecies() = 0;
 
         // appelé pour donner le tour courant
-        virtual void infoTurn(int);
+        virtual void infoTurn(int turn);
 
         // appelé pour prévenir qu'un bébé avec cet id est né !
         virtual void infoSpawn(int /*babyId*/) { }

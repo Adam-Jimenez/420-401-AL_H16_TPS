@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void Alien::infoTurn(int){
+void Alien::infoTurn(int turn){
     cout << " Test infoTurn " << endl;
 }
 

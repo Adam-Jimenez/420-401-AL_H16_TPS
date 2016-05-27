@@ -15,9 +15,20 @@ using namespace std;
 AlienUqomua::AlienUqomua() : Alien(Uqomua), m_move(rand()%2)
 { }
 
+void AlienUqomua::infoStatus(int x, int y, int width, int height, int energy){
+    cout << "infoStatus" << endl;
+    m_move = !m_move;
+}
+
+void AlienUqomua::infoTurn(int turn){
+    cout << "infoTurn" << endl;
+    cout << turn << endl;
+}
+
 Alien::Attack AlienUqomua::queryAttack(Color   alienColor,
                                        Species alienSpecies)
 {
+    cout << "query attack" << endl;
     if(alienColor==Red || alienColor==Green){
         if(alienSpecies!=Uqomua){
             return Acid;
@@ -31,21 +42,25 @@ Alien::Attack AlienUqomua::queryAttack(Color   alienColor,
 
 Alien::Move AlienUqomua::queryMove()
 {
-    return (m_move=!m_move)? Right : Down ;
+    cout << "query move" << endl;
+    return m_move? Right : Down ;
 }
 
 bool AlienUqomua::queryEat()
 {
+    cout << "query eat" << endl;
     return true;
 }
 
 Alien::Color AlienUqomua::queryColor()
 {
+    cout << "query color" << endl;
     return m_move? Green : Red;
 }
 
 Alien::Species AlienUqomua::querySpecies()
 {
+    cout << "query species" << endl;
     return Uqomua;
 }
 
