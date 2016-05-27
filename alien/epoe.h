@@ -17,5 +17,8 @@ class AlienEpoe : public Alien
         Species querySpecies();
 
     private:
+        int m_move_counter;
+        bool random_move;
+        Move direction;
 };
 #endif
