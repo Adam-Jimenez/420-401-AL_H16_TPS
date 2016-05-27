@@ -8,6 +8,8 @@
 
 using namespace std;
 
+// TODO faire les verification de pointers (? ==0)
+
 Board::Board(int      width,
              int      height,
              ptr<Gui> gui) :
@@ -88,10 +90,13 @@ pair<int, int> Board::operator[](ptr<Alien> alien) const
     // Retourne une paire (x,y) représentant la case où l'alien est stocké
     // dans la carte ou la paire (-1, -1) le cas échéant
     // Servez-vous de posToPair !
-    int x, y, pos;
+    int x=-1, y=-1, pos;
     std::map< ptr<Alien>, int>::const_iterator it = m_aliensToPos.find(alien);
+    if(it == m_aliensToPos.end())
+        return make_pair(x, y);
     pos = it->second;
     posToPair(pos, x, y); 
+    //cout << "operator x: " << x << "; y: " << y << endl;
     return make_pair(x, y);
 }
 
@@ -211,7 +216,6 @@ void Board::removeFood(int x,
     m_food[pos] = false;
 }
 
-// TODO faire les verification de pointers (? ==0)
 void Board::removeAlien(ptr<Alien> alien)
 {
     // TODO! Complétez-moi
@@ -233,6 +237,7 @@ void Board::moveAlien(ptr<Alien> alien,
     if (!m_gui.empty()) { m_gui->moveAlien(alien, x, y); }
     int oldPos = m_aliensToPos[alien];
     int newPos = pairToPos(x, y);
+    // TODO faut verifier le comportement de la copie de alien
     m_aliensToPos[alien] = newPos;
     m_posToAliens[newPos] = alien;
     m_posToAliens.erase(oldPos);
