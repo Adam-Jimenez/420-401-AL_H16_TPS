@@ -8,11 +8,46 @@ SmartAlien::SmartAlien(Species species, int id) :
     Alien(species, id),
     m_direction(static_cast<Move>(rand()%4+1)){ }
 
-void SmartAlien::infoTurn(int turn){
-    m_turn = turn;
+void SmartAlien::infoStatus(int x, int y, int width, int height, int energy){
+    m_width = width;
+    m_height = height;
+    m_x = x;
+    m_y = y;
+    m_energy = energy;
 }
 
+void SmartAlien::infoTurn(int turn){
+    m_turn = turn;
+    m_foodAround = false;
+    m_enemyAround = false;
+    m_foodVector.clear();
+    m_allyVector.clear();
+    m_enemyVector.clear();
+}
+
+// faut ajouter ds les vecteurs respectifs
+void SmartAlien::infoNeighboor(int x, int y, Color color, Species species, bool sleeping, bool mating, bool eating){
+    int key = m_turn%2;
+    if(color==Purple && species==Owa){
+        if(eating || sleeping || mating){
+            m_allyAround = true;
+        } // else on sait pas
+    } else {
+        if(key==0){
+            if((color==Red && species==Og) || (color==Blue && species==Uqomua)){
+                m_allyAround = true;
+            }else m_enemyAround = true;
+        }else{
+            if((color==Green && species==Yuhq) || (color==Yellow && species == Grutub))
+                m_allyAround = true;
+            else m_enemyAround = true;
+        }
+    }
+}
+
+
 void SmartAlien::infoFood(int x, int y){
+    m_foodVector.push_back(pair<int, int>(x, y));
     m_foodAround = true;
 }
 
@@ -52,11 +87,11 @@ Alien::Attack SmartAlien::queryAttack(Color   alienColor,
 Alien::Move SmartAlien::queryMove()
 {
     if(!m_allyAround){
-        if(m_enemyAround && energy()>20){
+        if(m_enemyAround && m_energy>15){
             //bouge dans direction opposee
         }
     } else {
-        if(energy()<20){
+        if(m_energy<15){
             //bouge vers bouffe
         }else if(m_enemyAround){
             //bouge vers enemy
@@ -67,19 +102,28 @@ Alien::Move SmartAlien::queryMove()
 
 bool SmartAlien::queryEat()
 {
-    if(m_enemyAround){
-        if(!m_allyAround || energy()>20) return false;
-    }
-    return true;
+    if(m_enemyAround && !m_allyAround)
+        return false;
+    if(m_energy<10)
+        return true;
+    return false;
 }
 
 Alien::Color SmartAlien::queryColor()
 {
-    return Red;
+    if(m_energy<10) return Purple;
+    bool randomKey = rand()%2;
+    int turnKey = m_turn%2;
+    if(turnKey==0) return randomKey? Red : Blue;
+    return randomKey? Green : Yellow;
 }
 
 Alien::Species SmartAlien::querySpecies()
 {
-    return Grutub;
+    if(m_energy<10) return Owa;
+    bool randomKey = rand()%2;
+    int turnKey = m_turn%2;
+    if(turnKey==0) return randomKey? Og : Uqomua;
+    return randomKey? Yuhq : Grutub;
 }
 
