@@ -8,8 +8,7 @@
 class SmartAlien : public Alien
 {
     public:
-        SmartAlien(Species species,
-                   int     id=-1);
+        SmartAlien(Species species, int id=-1);
         ptr<Alien> clone() const { return make_ptr<SmartAlien>(*this); }
         Attack queryAttack(Color   alienColor,
                            Species alienSpecies);
@@ -29,6 +28,8 @@ class SmartAlien : public Alien
         int m_height;
         int m_turn;
         int m_energy;
+        bool m_randomKey;
+        bool m_turnKey;
 
         bool m_foodAround;
         bool m_enemyAround;
@@ -39,5 +40,8 @@ class SmartAlien : public Alien
         std::vector<std::pair<int, int> > m_allyVector;
         std::vector<std::pair<int, int> > m_enemyVector;
 
+        Move calculateDirectionTo(int x, int y);
+        bool findPairInAllies(std::pair<int, int> a_pair);
+        bool allyAt(Move move);
 };
 #endif // SMART_ALIEN_H
