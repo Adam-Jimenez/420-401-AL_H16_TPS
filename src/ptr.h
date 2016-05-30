@@ -15,8 +15,7 @@ class ptr
         
         // constr copie
         ptr(const ptr &p) : m_ptr(p.m_ptr), m_references(p.m_references), m_owning(p.m_owning) { 
-            if(m_references!=0)
-                (*m_references)++;
+            incr();
         }
 
         // constr copie a partir d'un autre ptr intelligent
@@ -27,26 +26,17 @@ class ptr
                     m_references = new int(0);
                 }else{
                     m_references = p.getref();
-                    if(m_references!=0){
-                        (*m_references)++;
-                    }
+                    incr();
                 }
             }
 
         // operateur = avec meme type
         ptr<T> operator=(const ptr<T>& p)
         { 
-            //decr();
-            if(m_references!=0){
-                (*m_references)--;
-                if(*m_references == 0 && m_owning){
-                    delete m_ptr;
-                    delete m_references;
-                }
-            }
+            decr();
             m_ptr = p.m_ptr; 
             m_references = p.m_references;
-            if(m_references!=0) (*m_references)++;
+            incr();
             // owning?
             return *this;
         }
@@ -54,10 +44,6 @@ class ptr
         // destructeur
         ~ptr(){
             decr();
-            /*if(*m_references==0 && m_owning && m_ptr!=0){
-                delete m_ptr;
-                delete m_references;
-            }*/
         }
 
         // operateur ->
@@ -71,7 +57,7 @@ class ptr
 
         int* getref() const { 
             return m_references;
-        }//debug
+        }
 
         // operateur *
         T& operator*() const { 
@@ -83,14 +69,14 @@ class ptr
         }
 
         void incr(){ 
-            if(m_references!=0) (*m_references)++;
+            if(m_references!=0 && m_owning) (*m_references)++;
         }
 
         void decr()
         {
-            if(m_references!=0){
+            if(m_references!=0 && m_owning){
                 (*m_references)--;
-                if(m_ptr != 0 && *m_references==0 && m_owning) {
+                if(*m_references==0) {
                     delete m_ptr; 
                     delete m_references;
                     m_ptr = 0;
