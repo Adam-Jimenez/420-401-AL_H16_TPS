@@ -97,7 +97,7 @@ Alien::Attack SmartAlien::queryAttack(Color   alienColor,
     return static_cast<Attack>(rand()%3+1);
 }
 
-Alien::Move SmartAlien::calculateDirectionTo(pair<int, int> p_pair) const{
+Alien::Move SmartAlien::calculateDirectionTo(const pair<int, int>& p_pair) const{
     if(m_x == p_pair.first && m_y == p_pair.second) return None;
     pair<int, int> m_pair = getDistancePair(p_pair);
 
@@ -116,7 +116,7 @@ Alien::Move SmartAlien::calculateDirectionTo(pair<int, int> p_pair) const{
     */
 }
 
-bool SmartAlien::allyAt(Move move){
+bool SmartAlien::allyAt(Move move) const{
     int x = m_x;
     int y = m_y;
 
@@ -127,23 +127,23 @@ bool SmartAlien::allyAt(Move move){
 
     pair<int, int> a_pair(x,y);
 
-    size_t size = m_allyVector.size();
-    // jai essaye avec un iterateur et find,
+    // jai essaye avec stl find
     // sa donne une grosse poutine d'erreures bizarre
-    for(size_t i=0; i<size; i++){
-        if(m_allyVector[i] == a_pair) return true;
+    for(vector<pair<int,int> >::const_iterator it=m_allyVector.begin();
+            it!=m_allyVector.end(); it++){
+        if(*it == a_pair) return true;
     }
     return false;
 }
 
-pair<int, int> SmartAlien::getDistancePair(pair<int, int> pPair) const{
+pair<int, int> SmartAlien::getDistancePair(const pair<int, int>& pPair) const{
     pair<int, int> mPair(pPair.first-m_x, pPair.second-m_y);
     if(mPair.first > m_width/2) mPair.first-=m_width;
     if(mPair.second > m_height/2) mPair.second-=m_height;
     return mPair;
 }
 
-pair<int, int> SmartAlien::getClosestObject(vector<pair<int, int> >& vec) {
+pair<int, int> SmartAlien::getClosestObject(vector<pair<int, int> >& vec) const {
     pair<int,int> rPair(0,0);
     if(vec.size()==0) return rPair;
     int tmp = 99999;
