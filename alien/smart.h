@@ -40,8 +40,10 @@ class SmartAlien : public Alien
         std::vector<std::pair<int, int> > m_allyVector;
         std::vector<std::pair<int, int> > m_enemyVector;
 
-        Move calculateDirectionTo(int x, int y);
-        bool findPairInAllies(std::pair<int, int> a_pair);
+        bool isAlly(Color color, Species species, bool eating, bool sleeping, bool mating) const;
+        Move calculateDirectionTo(std::pair<int,int>) const;
         bool allyAt(Move move);
+        std::pair<int, int> getClosestObject(std::vector<std::pair<int, int> >& vec);
+        std::pair<int, int> getDistancePair(std::pair<int, int> pPair) const;
 };
 #endif // SMART_ALIEN_H

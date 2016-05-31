@@ -29,31 +29,36 @@ void SmartAlien::infoTurn(int turn){
     m_enemyVector.clear();
 }
 
-// a reorganiser
-void SmartAlien::infoNeighboor(int x, int y, Color color, Species species, bool sleeping, bool mating, bool eating){
+bool SmartAlien::isAlly(Color color, Species species, bool eating, bool sleeping, bool mating) const {
     if(color==Blue && species==realSpecies()){
         if(eating || sleeping || mating || m_turn == 0 ){
-            m_allyAround = true;
-            m_allyVector.push_back(pair<int, int>(x, y));
-        } // else on sait pas, on l'ignore
+            return true;
+        } else // else on sait pas, on l'ignore
+            return false;
     } else {
         if(!m_turnKey){
             if((color==Red && species==Og) || (color==Blue && species==Uqomua)){
-                m_allyAround = true;
-                m_allyVector.push_back(pair<int, int>(x, y));
+                return true;
             }else{
-                m_enemyAround = true;
-                m_enemyVector.push_back(pair<int, int>(x, y));
+                return false;
             }
         }else{
             if((color==Green && species==Yuhq) || (color==Yellow && species == Grutub)){
-                m_allyAround = true;
-                m_allyVector.push_back(pair<int, int>(x, y));
+                return true;
             }else{
-                m_enemyAround = true;
-                m_enemyVector.push_back(pair<int, int>(x, y));
+                return false;
             }
         }
+    }
+}
+
+void SmartAlien::infoNeighboor(int x, int y, Color color, Species species, bool sleeping, bool mating, bool eating){
+    if(isAlly(color, species, sleeping, mating, eating)){
+        m_allyVector.push_back(pair<int, int>(x, y));
+        m_allyAround = true;
+    } else {
+        m_enemyVector.push_back(pair<int, int>(x, y));
+        m_enemyAround = true;
     }
 }
 
@@ -73,10 +78,6 @@ Alien::Attack SmartAlien::queryAttack(Color   alienColor,
         else if (myColor==Yellow || myColor==Gray) return Fungus;
         else return Acid;
     }else if(alienColor==Yellow){ 
-        // forte chance que ce soit Og
-        // faut s'arranger pour faire en sorte que si on
-        // l'attaque, que notre species soit Og, Grutub ou Owa
-        // car il forfeit si c le cas
         if(mySpecies == Uqomua){
             return Plasma;
         }else if(mySpecies == Yuhq){
@@ -96,25 +97,36 @@ Alien::Attack SmartAlien::queryAttack(Color   alienColor,
     return static_cast<Attack>(rand()%3+1);
 }
 
-Alien::Move SmartAlien::calculateDirectionTo(int x, int y){
-    if(m_x == x && m_y == y) return None;
-    // 49 - 1 = 48 | devrait etre -2
-    // 3 - 1 = 2 | devrait etre 2
+Alien::Move SmartAlien::calculateDirectionTo(pair<int, int> p_pair) const{
+    if(m_x == p_pair.first && m_y == p_pair.second) return None;
+    pair<int, int> m_pair = getDistancePair(p_pair);
+
+    if(abs(m_pair.first) > abs(m_pair.second)){ // bouger horizontalement
+        if(m_pair.first>0)
+            return Right;
+        return Left;
+    }else if(m_pair.second>0)
+        return Up;
+    return Down;
+    /*
     int xDiff = x-m_x;
     int yDiff = y-m_y;
     if(xDiff > m_width/2) xDiff-=m_width;
-    if(yDiff > m_width/2) yDiff-=m_width;
-
-    if(abs(xDiff) > abs(yDiff)){ // bouger horizontalement
-        if(xDiff>0)
-            return Right;
-        return Left;
-    }else if(yDiff>0)
-        return Up;
-    return Down;
+    if(yDiff > m_height/2) yDiff-=m_width;
+    */
 }
 
-bool SmartAlien::findPairInAllies(pair<int, int> a_pair){
+bool SmartAlien::allyAt(Move move){
+    int x = m_x;
+    int y = m_y;
+
+    if(move == Right) x++;
+    else if(move == Left) x--;
+    else if(move == Up) y++;
+    else if(move == Down) y--;
+
+    pair<int, int> a_pair(x,y);
+
     size_t size = m_allyVector.size();
     // jai essaye avec un iterateur et find,
     // sa donne une grosse poutine d'erreures bizarre
@@ -124,36 +136,49 @@ bool SmartAlien::findPairInAllies(pair<int, int> a_pair){
     return false;
 }
 
-bool SmartAlien::allyAt(Move move){
-    int x = m_x;
-    int y = m_y;
-    if(move == Right) x++;
-    else if(move == Left) x--;
-    else if(move == Up) y++;
-    else if(move == Down) y--;
-    return findPairInAllies(pair<int, int>(x, y));
+pair<int, int> SmartAlien::getDistancePair(pair<int, int> pPair) const{
+    pair<int, int> mPair(pPair.first-m_x, pPair.second-m_y);
+    if(mPair.first > m_width/2) mPair.first-=m_width;
+    if(mPair.second > m_height/2) mPair.second-=m_height;
+    return mPair;
+}
+
+pair<int, int> SmartAlien::getClosestObject(vector<pair<int, int> >& vec) {
+    pair<int,int> rPair(0,0);
+    if(vec.size()==0) return rPair;
+    int tmp = 99999;
+    int current;
+    pair<int, int> tmp_pair;
+
+    for(vector<pair<int, int> >::const_iterator it=vec.begin(); it!=vec.end(); it++){
+        tmp_pair = getDistancePair(*it);
+        current = abs(tmp_pair.first)+abs(tmp_pair.second);
+        if(current < tmp){
+            rPair = *it;
+            tmp = current;
+        }
+    }
+
+    return rPair;
 }
 
 Alien::Move SmartAlien::queryMove()
 {
     if(m_enemyAround){
         if(m_energy>10){ // bouge vers enemie
-            int enemyIndex = rand()%m_enemyVector.size();
-            pair<int, int> enemyPos = m_enemyVector[enemyIndex];
-            m_direction = calculateDirectionTo(enemyPos.first, enemyPos.second);
+            pair<int, int> enemyPos = getClosestObject(m_enemyVector);
+            m_direction = calculateDirectionTo(enemyPos);
             if(allyAt(m_direction)) return None;
         }else{ // conserve energie
             return None;
         }
     }else if(m_allyAround && m_energy > 10 && !hasMated()){
-        int allyIndex = rand()%m_allyVector.size();
-        pair<int, int> allyPos = m_allyVector[allyIndex];
-        m_direction = calculateDirectionTo(allyPos.first, allyPos.second);
+        pair<int, int> allyPos = getClosestObject(m_allyVector);
+        m_direction = calculateDirectionTo(allyPos);
     }else if(m_foodAround && m_energy < 20){
         //bouge vers bouffe
-        int foodIndex = rand()%m_foodVector.size();
-        pair<int, int> foodPos = m_foodVector[foodIndex];
-        m_direction = calculateDirectionTo(foodPos.first, foodPos.second);
+        pair<int, int> foodPos = getClosestObject(m_foodVector);
+        m_direction = calculateDirectionTo(foodPos);
     }else if(m_energy<20){
         return None;
     }
