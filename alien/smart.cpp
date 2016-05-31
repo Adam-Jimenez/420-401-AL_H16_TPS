@@ -33,7 +33,7 @@ bool SmartAlien::isAlly(Color color, Species species, bool eating, bool sleeping
     if(color==Blue && species==realSpecies()){
         if(eating || sleeping || mating || m_turn == 0 ){
             return true;
-        } else // else on sait pas, on l'ignore
+        } else 
             return false;
     } else {
         if(!m_turnKey){
@@ -43,7 +43,7 @@ bool SmartAlien::isAlly(Color color, Species species, bool eating, bool sleeping
                 return false;
             }
         }else{
-            if((color==Green && species==Yuhq) || (color==Yellow && species == Grutub)){
+            if((color==Green && species==Yuhq) || (color==Gray && species == Epoe)){
                 return true;
             }else{
                 return false;
@@ -92,7 +92,6 @@ Alien::Attack SmartAlien::queryAttack(Color   alienColor,
         return Plasma;
     }else if(alienColor==Gray && alienSpecies==Epoe){
         // ben la, si Epoe attaque cest une atk random... so bleh
-        //if(mySpecies!=Epoe || myColor==Yellow || myColor==Blue)
     }
     return static_cast<Attack>(rand()%3+1);
 }
@@ -108,12 +107,6 @@ Alien::Move SmartAlien::calculateDirectionTo(const pair<int, int>& p_pair) const
     }else if(m_pair.second>0)
         return Up;
     return Down;
-    /*
-    int xDiff = x-m_x;
-    int yDiff = y-m_y;
-    if(xDiff > m_width/2) xDiff-=m_width;
-    if(yDiff > m_height/2) yDiff-=m_width;
-    */
 }
 
 bool SmartAlien::allyAt(Move move) const{
@@ -127,8 +120,6 @@ bool SmartAlien::allyAt(Move move) const{
 
     pair<int, int> a_pair(x,y);
 
-    // jai essaye avec stl find
-    // sa donne une grosse poutine d'erreures bizarre
     for(vector<pair<int,int> >::const_iterator it=m_allyVector.begin();
             it!=m_allyVector.end(); it++){
         if(*it == a_pair) return true;
@@ -199,15 +190,15 @@ bool SmartAlien::queryEat()
 
 Alien::Color SmartAlien::queryColor()
 {
-    if((m_energy<15 && m_foodAround) || m_energy<5) return Purple;
+    if((m_energy<15 && m_foodAround) || m_energy<5) return Blue;
     if(!m_turnKey) return m_randomKey? Red : Blue;
-    return m_randomKey? Green : Yellow;
+    return m_randomKey? Green : Gray;
 }
 
 Alien::Species SmartAlien::querySpecies()
 {
-    if((m_energy<15 && m_foodAround) || m_energy<5) return Grutub;
+    if((m_energy<15 && m_foodAround) || m_energy<5) return realSpecies();
     if(!m_turnKey) return m_randomKey? Og : Uqomua;
-    return m_randomKey? Yuhq : Grutub;
+    return m_randomKey? Yuhq : Epoe;
 }
 

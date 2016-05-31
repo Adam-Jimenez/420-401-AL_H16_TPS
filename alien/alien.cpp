@@ -13,12 +13,6 @@ void Alien::infoStatus(int x,
                        int width,
                        int height,
                        int energy){
-    /*
-    cout << "m_energy: " << m_energy << endl;
-    cout << "m_hasMated: " << m_hasMated << endl;
-    cout << "m_sleepingTurn: " << m_sleepingTurn << endl;
-    cout << "m_eatingTurn: " << m_eatingTurn << endl;
-    */
 };
 
 
@@ -128,8 +122,6 @@ Alien::Alien(const Alien &alien) :
     m_species(alien.m_species), // va changer éventuellement !
     m_color(alien.m_color) // va changer éventuellement !
 {
-    // m_ids ne peut etre vide puisque c'est une copie, donc c'est safe de déréférencer le dernier
-    // id
     m_id = *(--m_ids.end()) + 1;
     m_ids.insert(m_id);
 }
@@ -147,8 +139,6 @@ Alien & Alien::operator=(const Alien &alien)
         m_species      = alien.m_species; // va changer éventuellement !
         m_color        = alien.m_color; // va changer éventuellement !
 
-        // m_ids ne peut etre vide puisque c'est une copie, donc c'est safe de déréférencer le
-        // dernier id
         m_id = *(--m_ids.end()) + 1;
         m_ids.insert(m_id);
     }

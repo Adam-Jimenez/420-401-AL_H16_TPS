@@ -8,8 +8,6 @@
 
 using namespace std;
 
-// TODO faire les verification de pointers (? ==0)
-
 Board::Board(int      width,
              int      height,
              ptr<Gui> gui) :
@@ -96,7 +94,6 @@ pair<int, int> Board::operator[](ptr<Alien> alien) const
         return make_pair(x, y);
     pos = it->second;
     posToPair(pos, x, y); 
-    //cout << "operator x: " << x << "; y: " << y << endl;
     return make_pair(x, y);
 }
 
@@ -116,7 +113,6 @@ vector< ptr<Alien> > Board::neighboors(ptr<Alien> alien) const
     
     for(std::map<int, ptr<Alien> >::const_iterator i=m_posToAliens.begin(); i!=m_posToAliens.end(); i++){
         if(i->second==alien) continue;
-        //int x2, y2; ?
         alienPair = (*this)[i->second];
         x2=alienPair.first;
         y2=alienPair.second;
@@ -197,10 +193,6 @@ void Board::addAlien(ptr<Alien> alien,
     // Laissez ce code
     if (!m_gui.empty()) { m_gui->addAlien(alien, x, y); }
     int pos = pairToPos(x, y);
-    // TODO
-    // est-ce quil faut faire une copie de pointer ici??
-    // et dans les autres fonctions??
-    // ou bien cest loperateur = qui soccupe de sa?
     m_aliensToPos[alien] = pos;
     m_posToAliens[pos] = alien;
 }
@@ -237,7 +229,6 @@ void Board::moveAlien(ptr<Alien> alien,
     if (!m_gui.empty()) { m_gui->moveAlien(alien, x, y); }
     int oldPos = m_aliensToPos[alien];
     int newPos = pairToPos(x, y);
-    // TODO faut verifier le comportement de la copie de alien
     m_aliensToPos[alien] = newPos;
     m_posToAliens[newPos] = alien;
     m_posToAliens.erase(oldPos);

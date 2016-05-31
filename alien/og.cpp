@@ -1,9 +1,6 @@
 #include "alien/og.h"
 #include <stdlib.h>
 
-// TODO : Implémenter les comportements prédéfinis de ces aliens
-// tel que décris dans l'énoncé.
-
 using namespace std;
 
 AlienOg::AlienOg() : Alien(Og), m_step(0), m_count(0), m_direction(Up), m_xPivot(-1), m_yPivot(-1)

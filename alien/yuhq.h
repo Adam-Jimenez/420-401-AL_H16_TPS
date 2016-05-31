@@ -16,8 +16,6 @@ class AlienYuhq : public Alien
         Color queryColor();
         Species querySpecies();
         void infoTurn(int turn);
-        //void infoStatus(int x, int y, int width, int height, int energy);
-
 
     private:
         bool m_moved;

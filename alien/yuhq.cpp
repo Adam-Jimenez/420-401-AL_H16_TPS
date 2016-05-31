@@ -1,9 +1,6 @@
 #include "alien/yuhq.h"
 #include <stdlib.h>
 
-// TODO : Implémenter les comportements prédéfinis de ces aliens
-// tel que décris dans l'énoncé.
-
 using namespace std;
 
 AlienYuhq::AlienYuhq() : Alien(Yuhq), m_moved(false), m_eatCount(-1)

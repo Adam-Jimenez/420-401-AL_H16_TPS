@@ -1,14 +1,10 @@
 #include "alien/epoe.h"
 #include <stdlib.h>
 
-// TODO : Implémenter les comportements prédéfinis de ces aliens
-// tel que décris dans l'énoncé.
-
 using namespace std;
 
-AlienEpoe::AlienEpoe() : Alien(Epoe), random_move(true), m_fight_counter(4)
+AlienEpoe::AlienEpoe() : Alien(Epoe), random_move(true), m_fight_counter(4), m_move_counter(0)
 {
-    m_move_counter=0; // noob
 }
 
 void AlienEpoe::infoTurn(int turn){
