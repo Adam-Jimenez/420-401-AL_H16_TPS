@@ -37,7 +37,6 @@ class ptr
             m_ptr = p.m_ptr; 
             m_references = p.m_references;
             incr();
-            // owning?
             return *this;
         }
         
