@@ -1,13 +1,16 @@
 #include "alien/smart.h"
 #include <stdlib.h>
 #include <iostream>
+#include <time.h>
 
 using namespace std;
 
 SmartAlien::SmartAlien(Species species, int id) :
     Alien(species, id),
     m_direction(static_cast<Move>(rand()%4+1))
-    { }
+    {
+        srand(time(NULL));
+    }
 
 void SmartAlien::infoStatus(int x, int y, int width, int height, int energy){
     m_width = width;
